@@ -51,24 +51,3 @@ spec:
               port: 5000
             periodSeconds: 5
             initialDelaySeconds: 10
-          env:
-            - name: SNOWFLAKE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: snowflake
-                  key: SNOWFLAKE_USER
-            - name: SNOWFLAKE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: snowflake
-                  key: SNOWFLAKE_PASSWORD
-            - name: SNOWFLAKE_DB
-              valueFrom:
-                secretKeyRef:
-                  name: snowflake
-                  key: SNOWFLAKE_DB
-            - name: SNOWFLAKE_ACCOUNT
-              valueFrom:
-                secretKeyRef:
-                  name: snowflake
-                  key: SNOWFLAKE_ACCOUNT
