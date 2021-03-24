@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: mlgateway
-          image: wbassler/argo-example:0.0.4
+          image: wbassler/argo-example:0.0.5
           imagePullPolicy: IfNotPresent
           command: 
             - python
