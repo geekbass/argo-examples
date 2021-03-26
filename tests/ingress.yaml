@@ -6,7 +6,6 @@ metadata:
   namespace: mlops-test
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/app-root: /test/audit
 spec:
   rules:
   - host: tests
@@ -27,7 +26,6 @@ metadata:
   namespace: mlops-test
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/app-root: /test/healthz
 spec:
   rules:
   - host: tests
