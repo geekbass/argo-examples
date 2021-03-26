@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mlgateway
+  name: mlgateway-audit
   namespace: mlops-test
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -22,7 +22,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mlgateway
+  name: mlgateway-healthz
   namespace: mlops-test
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
