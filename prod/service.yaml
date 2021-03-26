@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlgateway
+  labels:
+    app: mlgateway
+  namespace: mlops
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+    name: http
+  selector:
+    app: mlgateway

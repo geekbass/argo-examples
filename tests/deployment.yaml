@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mlgateway
+  name: mlgateway
+  namespace: mlops-test
+spec:
+  progressDeadlineSeconds: 120
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: mlgateway
+  template:
+    metadata:
+      labels:
+        app: mlgateway
+    spec:
+      containers:
+        - name: mlgateway
+          image: wbassler/argo-example:0.0.14
+          imagePullPolicy: IfNotPresent
+          command: 
+            - python
+            - /opt/code/app.py
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "500Mi"
+              cpu: "300m"
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            failureThreshold: 3
+            periodSeconds: 10
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            periodSeconds: 5
+            initialDelaySeconds: 10
