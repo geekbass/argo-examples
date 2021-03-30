@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 app = Flask(__name__)
 
-VERSION = "dev-0.0.15"
+VERSION = "dev-0.0.16"
 
 @app.route("/healthz", methods=["GET"])
 def healthz():
