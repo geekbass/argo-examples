@@ -24,17 +24,3 @@ subjects:
 - kind: ServiceAccount
   name: default
   namespace: argo
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: view
-  namespace: argo
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: view
-subjects:
-- kind: ServiceAccount
-  name: default
-  namespace: argo

@@ -38,9 +38,17 @@ spec:
       value: https://github.com/geekbass/argo-examples
     - name: branch
       value: main
-    # Eventually we make this a parameter to specify image tag
-    - name: image
-      value: wbassler/argo-example:0.0.1
+    - name: registry
+      value: wbassler/argo-example
+    - name: version
+      value: dev-0.0.1
+    - name: namespace
+      value: mlops-test
+    - name: deployment
+      value: mlgateway
+    # Internal endpoint of the app endpoint for testing
+    - name: service-endpoint
+      value: "http://mlgateway.mlops-test.svc.cluster.local/ml/audit"
   entrypoint: mlpipeline-template
   # We use a volume claim template so that we can have a shared workspace.
   volumeClaimTemplates:
@@ -68,7 +76,9 @@ spec:
             arguments:
               parameters:
                 - name: image
-                  value: "{{workflow.parameters.image}}"
+                  value: "{{workflow.parameters.registry}}"
+                - name: image
+                  value: "{{workflow.parameters.version}}"
             dependencies:
               - clone
           # - name: update-tests
@@ -83,8 +93,26 @@ spec:
                   value: "{{workflow.parameters.branch}}"
             dependencies:
               - build
-          #- name: test
-          #- name: unit-tests
+          - name: ready-check
+            template: ready-check
+            arguments:
+              parameters:
+                - name: namespace
+                  value: "{{workflow.parameters.namespace}}"
+                - name: deployment
+                  value: "{{workflow.parameters.deployment}}"
+            dependencies:
+              - deploy
+          - name: tests
+            template: tests
+            arguments:
+              parameters:
+                - name: repo
+                  value: "{{workflow.parameters.registry}}"
+                - name: version
+                  value: "{{workflow.parameters.version}}"
+            dependencies:
+              - ready-check
           # If tests are successful, destroy. For now if fail leave deployed for troubleshooting.
           #- name: destroy
           #- name: update-prod
@@ -145,7 +173,7 @@ spec:
           - --local
           - dockerfile=.
           - --output
-          - type=image,name=docker.io/{{inputs.parameters.image}},push=true
+          - type=image,name=docker.io/{{inputs.parameters.registry}}:{{inputs.parameters.version}},push=true
     - name: deploy
       inputs:
         parameters:
@@ -188,3 +216,34 @@ spec:
                   duration: 5s
                   factor: 2
                   maxDuration: 3m
+    - name: ready-check
+      inputs:
+        parameters:
+          - name: namespace
+          - name: deployment
+      container:
+        image: wbassler/pykube-test:0.0.3
+        env:
+          - name: DEPLOYMENT_NAME
+            value: "{{inputs.parameters.deployment}}"
+          - name: NAMESPACE_NAME
+            value: "{{inputs.parameters.namespace}}"
+        command:
+          - python
+        args:
+          - /opt/code/src/deployment_status.py
+    - name: tests
+      inputs:
+        parameters:
+          - name: image
+      container:
+        image: "{{inputs.parameters.image}}"
+        env:
+          - name: SERVICE_ENDPOINT
+            value: "{{inputs.parameters.service-endpoint}}"
+          - name: VERSION
+            value: "{{inputs.parameters.version}}"
+        command:
+          - python
+        args:
+          - /opt/code/tests/response_test.py

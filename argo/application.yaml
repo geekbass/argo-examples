@@ -1,3 +1,4 @@
+# Acts as the existing Production Application
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
