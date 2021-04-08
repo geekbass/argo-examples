@@ -16,7 +16,7 @@ spec:
     path: mlops/overlays/kind
   destination:
     server: https://kubernetes.default.svc
-    namespace: mlops-tools
+    namespace: argocd
   syncPolicy:
     automated:
       selfHeal: true
