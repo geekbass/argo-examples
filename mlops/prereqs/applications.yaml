@@ -1,0 +1,59 @@
+---
+# This is used to Deploy MLOps tools: Argo WF, Nginx, Prometheus, etc...
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlops-tools
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: mlops-tools
+  source:
+    repoURL: https://github.com/geekbass/argo-examples
+    targetRevision: HEAD
+    # We are deploying on Kind.
+    path: mlops/overlays/kind
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlops-tools
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+---
+# Acts as the existing Production Application
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mlgateway-prod-application
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: production
+  source:
+    repoURL: https://github.com/geekbass/argo-examples
+    targetRevision: HEAD
+    path: ml-app/overlays/prod
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mlops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+    - Validate=true
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
