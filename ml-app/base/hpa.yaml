@@ -3,6 +3,8 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: mlgateway
   namespace: mlops-test
+  labels:
+    app: mlgateway
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

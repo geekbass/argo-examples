@@ -27,6 +27,7 @@ spec:
           imagePullPolicy: IfNotPresent
           command: 
             - python
+          args:
             - /opt/code/app.py
           resources:
             requests:

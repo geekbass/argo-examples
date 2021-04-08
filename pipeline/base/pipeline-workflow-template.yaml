@@ -190,11 +190,11 @@ spec:
             finalizers:
               - resources-finalizer.argocd.argoproj.io
           spec:
-            project: default
+            project: testing
             source:
               repoURL: '{{inputs.parameters.repo}}'
               targetRevision: '{{inputs.parameters.branch}}'
-              path: tests
+              path: ml-app/overlays/test
               directory:
                 recurse: true
             destination:
