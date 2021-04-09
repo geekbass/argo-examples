@@ -7,3 +7,4 @@ commonLabels:
 resources:
   - ../../base
   - ingress.yaml
+  - namespace.yaml
