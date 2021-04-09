@@ -4,4 +4,5 @@ resources:
 - namespace.yaml
 - pipeline-workflow-template.yaml
 - pipeline-workflow-template-rbac.yaml
+- mlops-test-namespace.yaml
 namespace: argo

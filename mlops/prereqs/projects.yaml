@@ -23,8 +23,8 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: argocd
-  namespace: argocd
+  name: mlops-tools
+  namespace: mlops-tools
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
