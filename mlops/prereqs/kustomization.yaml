@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
 - projects.yaml
 - applications.yaml
-namespace: argocd
+# Hack because app of apps is not creating the namespaces
+- namespaces.yaml
