@@ -13,12 +13,14 @@ spec:
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
+    namespace: argo
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: true
     syncOptions:
+      - CreateNamespace=true
       - Validate=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
