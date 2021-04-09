@@ -4,4 +4,3 @@ resources:
 - ../../base
 patchesStrategicMerge:
 - deployment.yaml
-namespace: kube-system

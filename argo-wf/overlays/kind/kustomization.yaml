@@ -5,5 +5,4 @@ resources:
 - secrets.yaml
 patchesStrategicMerge:
 - config.yaml
-- service.yaml
 namespace: argo
