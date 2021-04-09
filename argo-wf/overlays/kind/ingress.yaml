@@ -21,4 +21,4 @@ spec:
           service:
             name: argo-server
             port:
-              number: 2746
+              number: 80
