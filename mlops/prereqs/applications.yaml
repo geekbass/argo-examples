@@ -8,7 +8,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: mlops-tools
+  project: default
   source:
     repoURL: https://github.com/geekbass/argo-examples
     targetRevision: HEAD
@@ -16,13 +16,23 @@ spec:
     path: mlops/overlays/kind
   destination:
     server: https://kubernetes.default.svc
-    namespace: mlops-tools
   syncPolicy:
     automated:
-      selfHeal: true
       prune: true
+      selfHeal: true
+      allowEmpty: true
     syncOptions:
+      - Validate=true
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - Replace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
 ---
 # Acts as the existing Production Application
 apiVersion: argoproj.io/v1alpha1

@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: mlops-tools
+  project: default
   source:
     path: metrics-server/overlays/kind
     repoURL: https://github.com/geekbass/argo-examples
@@ -15,6 +15,18 @@ spec:
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
-      selfHeal: true
       prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - Validate=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - Replace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
 

@@ -49,29 +49,38 @@ fi
 # Apply the context to kubectl
 kubectl cluster-info --context kind-${CLUSTER_NAME} 2> /dev/null
 
+# Wait for K8s services to start
+kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=etcd --timeout=130s
+kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-scheduler --timeout=130s
+kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-apiserver --timeout=130s
+kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-controller-manager --timeout=130s
+
 # Deploy Sealed Secrets
 echo "Deploying Sealed Secrets..."
-kubectl apply --filename ${SEALED_SECRETS_URL}
-kubectl wait --namespace kube-system -for=condition=ready pod --selector=name=sealed-secrets-controller --timeout=90s
+kubectl apply --filename sealed-secrets/controller.yaml
+sleep 3
+kubectl wait --namespace kube-system --for=condition=ready pod --selector=name=sealed-secrets-controller --timeout=90s
 
-# Create initial sealed secret.
+# Deploy Argo CD
+echo "Deploying Argo CD..."
+kustomize build argo-cd/overlays/kind/ | kubectl apply -f -
+kubectl wait --namespace argocd --for=condition=ready pod --selector=app.kubernetes.io/name=argocd-server --timeout=90s
+
+# Deploy the Prereqs which will hand deploying All the things: NGINX, ArgoWF, metrics-server, pipeline configs and the
+# initial Production app
+echo "Deploying All other things which can be found in Argo CD UI..."
+kustomize build mlops/prereqs/ | kubectl apply -f -
+
+# Deploy and create SealedSecret for Docker
 echo "Creating Sealed Secret for Docker Creds..."
-kubectl create secret docker-registry docker-config --docker-server=${DOCKER_SERVER} \
+kubectl create secret -n argo docker-registry docker-config --docker-server=${DOCKER_SERVER} \
   --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_PASSWORD} \
   --docker-email=${DOCKER_EMAIL} -output json \
   --dry-run=client \
   | kubeseal --format yaml \
   | tee pipelines/overlays/kind/secrets.yaml
 
-# Deploy Argo CD
-echo "Deploying Argo CD..."
-kustomize build argo-cd/overlays/kind/ | kubectl apply -f -
-kubectl wait --namespace argocd -for=condition=ready pod --selector=app.kubernetes.io/name=argocd-server --timeout=90s
-
-# Deploy the Prereqs which will hand deploying All the things: NGINX, ArgoWF, metrics-server, pipeline configs and the
-# initial Production app
-echo "Deploying All other things which can be found in Argo CD UI..."
-kustomize build mlops/prereqs/ | kubectl apply -f -
+kubectl apply --filename pipelines/overlays/kind/secrets.yaml
 
 # Update /etc/hosts
 echo "###########################################################"
