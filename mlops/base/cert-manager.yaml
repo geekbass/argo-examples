@@ -22,7 +22,7 @@ spec:
       syncOptions:
         - Validate=true
         - PrunePropagationPolicy=foreground
-        - CreateNamespace=cert-manager
+        - CreateNamespace=true
       retry:
         limit: 5
         backoff:
