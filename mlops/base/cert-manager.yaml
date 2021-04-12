@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: mlops
+  project: default
   source:
     path: deploy/charts/cert-manager
     repoURL: https://github.com/jetstack/cert-manager.git
@@ -18,5 +18,14 @@ spec:
     automated:
       selfHeal: true
       prune: true
-    syncOptions:
-    - CreateNamespace=true
+    syncPolicy:
+      syncOptions:
+        - Validate=true
+        - PrunePropagationPolicy=foreground
+        - CreateNamespace=cert-manager
+      retry:
+        limit: 5
+        backoff:
+          duration: 5s
+          factor: 2
+          maxDuration: 3m
