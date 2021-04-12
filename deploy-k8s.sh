@@ -80,7 +80,7 @@ kubectl create secret -n argo docker-registry docker-config --docker-server=${DO
   | kubeseal --format yaml \
   | tee pipeline/overlays/kind/secrets.yaml
 
-kubectl apply --filename pipelines/overlays/kind/secrets.yaml
+kubectl apply --filename pipeline/overlays/kind/secrets.yaml
 
 # Update /etc/hosts
 echo "###########################################################"
