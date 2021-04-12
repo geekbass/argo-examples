@@ -6,4 +6,5 @@ resources:
 - ingress.yaml
 patchesStrategicMerge:
 - config.yaml
+- deployment.yaml
 namespace: argo
