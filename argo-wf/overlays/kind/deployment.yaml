@@ -14,6 +14,11 @@ spec:
       serviceAccountName: argo-server
       containers:
         - name: argo-server
+          args:
+            - server
+            - --auth-mode=sso
+            - --secure=false
+            - --verbose
           image: argoproj/argocli:v3.0.1
           env:
             - name: BASE_HREF
