@@ -4,5 +4,6 @@ resources:
   - ../../base
   - external-dns.yaml
   - prometheus.yaml
+  - namespaces.yaml
 patchesStrategicMerge:
 - external-dns-deployment.yaml
