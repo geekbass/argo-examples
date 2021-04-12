@@ -16,8 +16,7 @@ spec:
         - name: argo-server
           args:
             - server
-            - --auth-mode=sso
-            - --secure=false
+            - --insecure-skip-verify
             - --verbose
           image: argoproj/argocli:v3.0.1
           env:
