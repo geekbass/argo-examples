@@ -4,8 +4,8 @@ metadata:
   name: argo
   namespace: argo
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    #nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     # https://kubernetes.github.io/ingress-nginx/examples/auth/basic/
     nginx.ingress.kubernetes.io/auth-type: basic
