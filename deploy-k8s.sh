@@ -78,7 +78,7 @@ kubectl create secret -n argo docker-registry docker-config --docker-server=${DO
   --docker-email=${DOCKER_EMAIL} --namespace argo --output json \
   --dry-run=client \
   | kubeseal --format yaml \
-  | tee pipelines/overlays/kind/secrets.yaml
+  | tee pipeline/overlays/kind/secrets.yaml
 
 kubectl apply --filename pipelines/overlays/kind/secrets.yaml
 
