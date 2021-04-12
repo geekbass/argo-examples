@@ -75,7 +75,7 @@ kustomize build mlops/prereqs/ | kubectl apply -f -
 echo "Creating Sealed Secret for Docker Creds..."
 kubectl create secret -n argo docker-registry docker-config --docker-server=${DOCKER_SERVER} \
   --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_PASSWORD} \
-  --docker-email=${DOCKER_EMAIL} -output json \
+  --docker-email=${DOCKER_EMAIL} --namespace argo --output json \
   --dry-run=client \
   | kubeseal --format yaml \
   | tee pipelines/overlays/kind/secrets.yaml
@@ -90,7 +90,7 @@ echo "127.0.0.1 argocd"
 echo "127.0.0.1 tests"
 ehco ""
 echo "Once you update /etc/hosts you can access the following:"
-echo "Argo Workflows UI: http://argo/argo-wf"
+echo "Argo Workflows UI: https://argo/"
 echo "ArgoCD UI: http://argocd/argo-cd"
 echo ""
 echo "You will be able to access the apps at:"
