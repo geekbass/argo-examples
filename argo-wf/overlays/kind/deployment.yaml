@@ -16,7 +16,6 @@ spec:
         - name: argo-server
           args:
             - server
-            - --insecure-skip-verify
             - --insecure-skip-tls-verify
             - --verbose
           image: argoproj/argocli:v3.0.1
