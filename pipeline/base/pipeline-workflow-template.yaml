@@ -236,9 +236,10 @@ spec:
       inputs:
         parameters:
           - name: version
+          - name: registry
           - name: service-endpoint
       container:
-        image: "{{inputs.parameters.image}}"
+        image: "{{inputs.parameters.registry}}:{{inputs.parameters.version}}"
         env:
           - name: SERVICE_ENDPOINT
             value: "{{inputs.parameters.service-endpoint}}"
