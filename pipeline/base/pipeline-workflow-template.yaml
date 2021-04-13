@@ -109,7 +109,7 @@ spec:
             template: tests
             arguments:
               parameters:
-                - name: repo
+                - name: registry
                   value: "{{workflow.parameters.registry}}"
                 - name: version
                   value: "{{workflow.parameters.version}}"
