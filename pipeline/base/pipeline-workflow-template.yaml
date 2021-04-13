@@ -113,6 +113,8 @@ spec:
                   value: "{{workflow.parameters.registry}}"
                 - name: version
                   value: "{{workflow.parameters.version}}"
+                - name: service-endpoint
+                  value: "{{inputs.parameters.service-endpoint}}"
             dependencies:
               - ready-check
           # If tests are successful, destroy. For now if fail leave deployed for troubleshooting.
