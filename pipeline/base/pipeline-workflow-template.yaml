@@ -75,7 +75,7 @@ spec:
             template: build
             arguments:
               parameters:
-                - name: image
+                - name: registry
                   value: "{{workflow.parameters.registry}}"
                 - name: image
                   value: "{{workflow.parameters.version}}"
@@ -91,6 +91,8 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: branch
                   value: "{{workflow.parameters.branch}}"
+                - name: namespace
+                  value: "{{workflow.parameters.namespace}}"
             dependencies:
               - build
           - name: ready-check
@@ -193,11 +195,9 @@ spec:
               repoURL: '{{inputs.parameters.repo}}'
               targetRevision: '{{inputs.parameters.branch}}'
               path: ml-app/overlays/test
-              directory:
-                recurse: true
             destination:
               server: https://kubernetes.default.svc
-              namespace: mlops-test
+              namespace: '{{inputs.parameters.namespace}}'
             syncPolicy:
               automated:
                 prune: true
