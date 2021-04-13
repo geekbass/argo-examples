@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
 - pipeline-workflow-template.yaml
 - pipeline-workflow-template-rbac.yaml
-namespace: argo
