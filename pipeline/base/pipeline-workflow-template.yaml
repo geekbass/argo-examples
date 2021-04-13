@@ -180,6 +180,7 @@ spec:
         parameters:
           - name: repo
           - name: branch
+          - name: namespace
       resource:
         action: create
         manifest: |
