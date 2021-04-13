@@ -24,3 +24,32 @@ subjects:
 - kind: ServiceAccount
   name: default
   namespace: argo
+---
+# Hack: Used to give ArgoWorkflow the ability to check the deployment status in ready-check step
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-deployment-status-cluster-role
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - deployments/status
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-deployment-status-cluster-rolebinding
+  namespace: mlops-test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argo-deployment-status-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: argo

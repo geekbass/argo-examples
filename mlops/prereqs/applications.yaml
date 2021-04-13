@@ -47,7 +47,7 @@ spec:
   source:
     repoURL: https://github.com/geekbass/argo-examples
     targetRevision: HEAD
-    path: ml-app/overlays/prod
+    path: ml-app/overlays/production
   destination:
     server: https://kubernetes.default.svc
     namespace: mlops
