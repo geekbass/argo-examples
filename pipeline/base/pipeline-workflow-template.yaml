@@ -77,7 +77,7 @@ spec:
               parameters:
                 - name: registry
                   value: "{{workflow.parameters.registry}}"
-                - name: image
+                - name: version
                   value: "{{workflow.parameters.version}}"
             dependencies:
               - clone
