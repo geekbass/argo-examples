@@ -73,10 +73,9 @@ kustomize build mlops/prereqs/ | kubectl apply -f -
 
 # Deploy and create SealedSecret for Docker
 echo "Creating Sealed Secret for Docker Creds..."
-kubectl create secret -n argo docker-registry docker-config --docker-server=${DOCKER_SERVER} \
-  --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_PASSWORD} \
-  --docker-email=${DOCKER_EMAIL} --namespace argo --output json \
-  --dry-run=client \
+kubectl create secret --namespace argo generic docker-config \
+  --from-literal="config.json={\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"$(echo -n $DOCKER_USERNAME:$DOCKER_TOKEN|base64)\"}}}" \
+  --output json --dry-run=client \
   | kubeseal --format yaml \
   | tee pipeline/overlays/kind/secrets.yaml
 
