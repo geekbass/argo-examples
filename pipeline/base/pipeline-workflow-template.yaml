@@ -144,7 +144,8 @@ spec:
     - name: build
       inputs:
         parameters:
-          - name: image
+          - name: registry
+          - name: version
       volumes:
         - name: docker-config
           secret:
