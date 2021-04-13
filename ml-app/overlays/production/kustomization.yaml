@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: mlops
 commonLabels:
   app: mlgateway
-  env: prod
+  env: production
 resources:
   - ../../base
   - ingress.yaml
