@@ -5,4 +5,5 @@ resources:
 - github.com/argoproj/argo/manifests/base
 - github.com/argoproj/argo/manifests/cluster-install/workflow-controller-rbac
 - github.com/argoproj/argo/manifests/cluster-install/argo-server-rbac
+- rbac.yaml
 namespace: argo
