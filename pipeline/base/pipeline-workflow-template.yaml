@@ -235,7 +235,8 @@ spec:
     - name: tests
       inputs:
         parameters:
-          - name: image
+          - name: version
+          - name: service-endpoint
       container:
         image: "{{inputs.parameters.image}}"
         env:
