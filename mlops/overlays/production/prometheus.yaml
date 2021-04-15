@@ -6,11 +6,11 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: mlops
+  project: default
   source:
-    path: charts/prometheus
-    repoURL: https://github.com/prometheus-community/helm-charts.git
-    targetRevision: HEAD
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 14.9.0
+    chart: kube-prometheus-stack
   destination:
     namespace: monitoring
     server: https://kubernetes.default.svc
