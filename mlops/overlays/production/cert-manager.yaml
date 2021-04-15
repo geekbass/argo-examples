@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default
   source:
-    path: deploy/charts/cert-manager
-    repoURL: https://github.com/jetstack/cert-manager.git
+    path: cert-manager/overlays/production
+    repoURL: https://github.com/geekbass/argo-examples
     targetRevision: HEAD
   destination:
     namespace: cert-manager
