@@ -15,4 +15,8 @@ nodes:
     - containerPort: 443
       hostPort: 443
       protocol: TCP
-  - role: worker
+    extraMounts:
+      - hostPath: mlflow/backend
+        containerPath: /mnt/postgresql/mlflow
+      - hostPath: mlflow/artifacts
+        containerPath: /mnt/minio/mlflow
