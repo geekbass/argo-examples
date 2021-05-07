@@ -6,4 +6,5 @@ resources:
   - metrics-server.yaml
   - nginx-ingress.yaml
   - pipeline-configs.yaml
+  - mlflow.yaml
 namespace: argocd
