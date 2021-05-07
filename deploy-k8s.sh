@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e 
+
 # Define variables so these can be modified for future use
 CLUSTER_NAME="argo"
-SEALED_SECRETS_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.15.0/controller.yaml"
 
 # Check for Docker install
 if [[ `which docker` == "" ]]; then
@@ -39,7 +39,7 @@ fi
 # Check for existing kind cluster with same name
 if [[ `kind get clusters | grep ${CLUSTER_NAME}` == "" ]]; then
   echo "Creating K8s locally with kind..."
-  kind create cluster --config argo/kind.yaml --name ${CLUSTER_NAME}
+  kind create cluster --config kind.yaml --name ${CLUSTER_NAME}
 else
   echo "kind cluster with cluster name ${CLUSTER_NAME} already exists..."
   echo "Please delete it before moving on or utilize the existing cluster..."
@@ -49,13 +49,16 @@ fi
 # Apply the context to kubectl
 kubectl cluster-info --context kind-${CLUSTER_NAME} 2> /dev/null
 
+# Sleep
+sleep 5
+
 # Wait for K8s services to start
 kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=etcd --timeout=130s
 kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-scheduler --timeout=130s
 kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-apiserver --timeout=130s
 kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-controller-manager --timeout=130s
 
-# Deploy Sealed Secrets
+# Deploy Sealed Secrets. Need this done before everything else.
 echo "Deploying Sealed Secrets..."
 kubectl apply --filename sealed-secrets/controller.yaml
 sleep 3
@@ -87,13 +90,17 @@ echo "Please be sure to update your /etc/hosts file with..."
 echo "127.0.0.1 argo"
 echo "127.0.0.1 argocd"
 echo "127.0.0.1 tests"
+echo "127.0.0.1 mlfow"
+echo "127.0.0.1 minio"
 echo ""
 echo "Once you update /etc/hosts you can access the following:"
 echo "Argo Workflows UI: https://argo/"
 echo "ArgoCD UI: http://argocd"
+echo "MLFlow UI: http://mlfow"
+echo "Minio UI: http://minio"
 echo ""
-echo "You will be able to access the apps at:"
-echo "Tests: http://tests/ml/audit"
-echo "Prod (Existing): http://localhost/ml/audit"
+echo "Send requests for prediction to:"
+echo "Tests: http://tests/ml/predict"
+echo "Prod (Existing): http://localhost/ml/predict"
 
 
