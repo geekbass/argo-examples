@@ -15,6 +15,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: kube-system
   syncPolicy:
+    automated:
+      selfHeal: true
     syncOptions:
       - Validate=true
       - PrunePropagationPolicy=foreground
