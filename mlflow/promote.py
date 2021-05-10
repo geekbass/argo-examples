@@ -11,8 +11,9 @@ logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 # Set the Remote Tracking Server Information
-mlflow.set_tracking_uri("http://mlflow")
-os.environ['MLFLOW_S3_ENDPOINT_URL'] = "http://minio"
+tracking_server = os.getenv("MLFLOW_TRACKING_URI", "http://mlflow")
+mlflow.set_tracking_uri(tracking_server)
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = os.getenv("MLFLOW_ARTIFACT_URI", "http://minio")
 os.environ['AWS_ACCESS_KEY_ID'] = "minio"
 os.environ['AWS_SECRET_ACCESS_KEY'] = "minio123"
 # Basic Auth Info

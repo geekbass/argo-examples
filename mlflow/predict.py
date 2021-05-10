@@ -1,6 +1,9 @@
+import os
 import random
 import requests
 import json
+
+service_endpoint = os.getenv("SERVICE_ENDPOINT", "http://localhost:5000/predict")
 
 
 def main():
@@ -25,7 +28,7 @@ def main():
 
     # Post the random Data and print the result
     headers = {'Content-type': 'application/json'}
-    r = requests.post("http://localhost:5000/predict", data=json.dumps(data), headers=headers).json()
+    r = requests.post(service_endpoint, data=json.dumps(data), headers=headers).json()
     print(r)
 
 
