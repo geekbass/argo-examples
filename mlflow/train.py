@@ -33,6 +33,9 @@ os.environ['AWS_SECRET_ACCESS_KEY'] = "minio123"
 os.environ['MLFLOW_TRACKING_USERNAME'] = "admin"
 os.environ['MLFLOW_TRACKING_PASSWORD'] = "password"
 
+# Set the model name
+model_name = "wine-model"
+
 # Get the Experiment ID to pass to the run and create it if it doesnt exist
 experiment = mlflow.get_experiment_by_name(os.getenv("EXPERIMENT_NAME"))
 if experiment is None:
@@ -100,5 +103,5 @@ if __name__ == "__main__":
         # Register the model. It will overwrite to a new version if filename exists.
         # This will register as the name of the below name but will be an artifact called model.pkl
         mlflow.sklearn.log_model(sk_model=model,
-                                 artifact_path='wine-model',
-                                 registered_model_name='wine-model')
+                                 artifact_path=model_name,
+                                 registered_model_name=model_name)

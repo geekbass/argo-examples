@@ -22,7 +22,7 @@ def main():
             "residual_sugar": residual_sugar, "chlorides": chlorides, "free_sulfur_dioxide": free_sulfur_dioxide,
             "total_sulfur_dioxide": total_sulfur_dioxide, "density": density, "ph": ph, "sulfates": sulfates,
             "alcohol": alcohol}
-    print(json.dumps(data))
+
     # Post the random Data and print the result
     headers = {'Content-type': 'application/json'}
     r = requests.post("http://localhost:5000/predict", data=json.dumps(data), headers=headers).json()
