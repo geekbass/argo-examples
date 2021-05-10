@@ -322,7 +322,7 @@ spec:
     - name: predict
       inputs:
         parameters:
-          - name: service-endpoint
+          - name: service_endpoint
       container:
         image: wbassler/mlflow-utils:0.0.1
         volumeMounts:
