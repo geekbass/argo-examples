@@ -29,6 +29,9 @@ mlflow.set_tracking_uri("http://mlflow")
 os.environ['MLFLOW_S3_ENDPOINT_URL'] = "http://minio"
 os.environ['AWS_ACCESS_KEY_ID'] = "minio"
 os.environ['AWS_SECRET_ACCESS_KEY'] = "minio123"
+# Basic Auth Info
+os.environ['MLFLOW_TRACKING_USERNAME'] = "admin"
+os.environ['MLFLOW_TRACKING_PASSWORD'] = "password"
 
 # Get the Experiment ID to pass to the run and create it if it doesnt exist
 experiment = mlflow.get_experiment_by_name(os.getenv("EXPERIMENT_NAME"))
@@ -36,7 +39,6 @@ if experiment is None:
     mlflow.create_experiment(os.getenv("EXPERIMENT_NAME"))
 
 experiment_id = mlflow.get_experiment_by_name(os.getenv("EXPERIMENT_NAME")).experiment_id
-
 
 
 def eval_metrics(actual, pred):

@@ -10,6 +10,16 @@ data:
   AWS_ACCESS_KEY_ID: minio
   AWS_SECRET_ACCESS_KEY: minio123
 ---
+# Used from Basic Auth: admin:password
+apiVersion: v1
+data:
+  auth: YWRtaW46JGFwcjEkODdYNk9JZXIkay9FYlBlM2hVWGtJTUplN2lMUk1jMAo=
+kind: Secret
+metadata:
+  name: basic-auth
+  namespace: mlflow
+type: Opaque
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -86,6 +96,10 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # https://kubernetes.github.io/ingress-nginx/examples/auth/basic/
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
 spec:
   rules:
   - host: mlflow
