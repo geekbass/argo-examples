@@ -1,31 +1,3 @@
-# SUMMARY:
-#
-# Build and push an image using Docker Buildkit based on Argo Example:
-# https://raw.githubusercontent.com/argoproj/argo-workflows/master/examples/buildkit-template.yaml
-#
-# DESCRIPTION:
-#
-# This does not need privileged access, unlike Docker in Docker (DIND). It has three stages:
-#
-# * clone the Git repository
-# * build the binary
-# * build and push the image containing the binary
-#
-# USAGE:
-#
-# Publishing images requires an access token. For hub.docker.com you can create one at https://hub.docker.com/settings/security
-# This needs to be mounted as `$DOCKER_CONFIG/config.json`. To do this, you'll need to create a secret as follows:
-#
-#    export DOCKER_USERNAME=******
-#    export DOCKER_TOKEN=******
-#    kubectl create secret -n argo generic docker-config --from-literal="config.json={\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"$(echo -n $DOCKER_USERNAME:$DOCKER_TOKEN|base64)\"}}}"
-#
-# REFERENCES:
-#
-# * https://github.com/moby/buildkit#expose-buildkit-as-a-tcp-service
-# * https://blog.alexellis.io/building-containers-without-docker/
-# * https://hub.docker.com/r/moby/buildkit
-#
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
@@ -47,8 +19,17 @@ spec:
     - name: deployment
       value: mlgateway
     # Internal endpoint of the app endpoint for testing
-    - name: service-endpoint
-      value: "http://mlgateway.mlops-test.svc.cluster.local/ml/audit"
+    - name: service_endpoint
+      value: "http://mlgateway.mlops-test.svc.cluster.local/predict"
+    - name: mlflow_tracking_uri
+      value: "http://mlflow-service.mlflow.svc.cluster.local"
+    - name: mflow_artifact_uri
+      value: "http://mlflow-minio-service.mlflow.svc.cluster.local"
+      # http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv
+    - name: csv_url
+      value: "wine_data.csv"
+    - name: experiment_name
+      value: "wine-quality"
   entrypoint: mlpipeline-template
   # We use a volume claim template so that we can have a shared workspace.
   volumeClaimTemplates:
@@ -71,6 +52,34 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: branch
                   value: "{{workflow.parameters.branch}}"
+          - name: processing
+            template: processing
+            dependencies:
+              - clone
+          - name: train
+            template: train
+            arguments:
+              parameters:
+                - name: csv_url
+                  value: "{{workflow.parameters.csv_url}}"
+                - name: experiment_name
+                  value: "{{workflow.parameters.experiment_name}}"
+                - name: mlflow_tracking_uri
+                  value: "{{workflow.parameters.mlflow_tracking_uri}}"
+                - name: mlflow_artifact_uri
+                  value: "{{workflow.parameters.mlflow_artifact_uri}}"
+            dependencies:
+              - processing
+          - name: promote
+            template: promote
+            arguments:
+              parameters:
+                - name: mlflow_tracking_uri
+                  value: "{{workflow.parameters.mlflow_tracking_uri}}"
+                - name: mlflow_artifact_uri
+                  value: "{{workflow.parameters.mlflow_artifact_uri}}"
+            dependencies:
+              - train
           - name: build
             template: build
             arguments:
@@ -80,7 +89,7 @@ spec:
                 - name: version
                   value: "{{workflow.parameters.version}}"
             dependencies:
-              - clone
+              - promote
           # - name: update-tests
           # Deploy via K8s Manifests using ArgoCD
           - name: deploy
@@ -117,10 +126,12 @@ spec:
                   value: "{{workflow.parameters.service-endpoint}}"
             dependencies:
               - ready-check
-          # If tests are successful, destroy. For now if fail leave deployed for troubleshooting.
-          #- name: destroy
-          #- name: update-production
-          #- name: push-branch
+          - name: predict
+            template: predict
+            arguments:
+              parameters:
+                - name: service-endpoint
+                  value: "{{workflow.parameters.service-endpoint}}"
     - name: clone
       inputs:
         parameters:
@@ -143,6 +154,63 @@ spec:
           - --single-branch
           - "{{inputs.parameters.repo}}"
           - .
+    - name: processing
+      container:
+        image: wbassler/mlflow-utils:0.0.1
+        volumeMounts:
+          - name: work
+            mountPath: /work
+        workingDir: /work/
+        command:
+          - python
+        args:
+          - /work/mlflow/processing.py
+    - name: train
+      inputs:
+        parameters:
+          - name: csv_url
+          - name: experiment_url
+          - name: mlflow_tracking_uri
+          - name: mlflow_artifact_uri
+      container:
+        image: wbassler/mlflow-utils:0.0.1
+        volumeMounts:
+          - name: work
+            mountPath: /work
+        workingDir: /work/
+        env:
+          - name: CSV_URL
+            value: "{{inputs.parameters.csv_url}}"
+          - name: EXPERIMENT_NAME
+            value: "{{inputs.parameters.experiment_name}}"
+          - name: MLFLOW_TRACKING_URI
+            value: "{{inputs.parameters.mlflow_tracking_uri}}"
+          - name: MLFLOW_ARTIFACT_URI
+            value: "{{inputs.parameters.mlflow_artifact_uri}}"
+        command:
+          - python
+        args:
+          - /work/mlflow/train.py
+    - name: promote
+      inputs:
+        parameters:
+          - name: mlflow_tracking_uri
+          - name: mlflow_artifact_uri
+      container:
+        image: wbassler/mlflow-utils:0.0.1
+        volumeMounts:
+          - name: work
+            mountPath: /work
+        workingDir: /work/
+        env:
+          - name: MLFLOW_TRACKING_URI
+            value: "{{inputs.parameters.mlflow_tracking_uri}}"
+          - name: MLFLOW_ARTIFACT_URI
+            value: "{{inputs.parameters.mlflow_artifact_uri}}"
+        command:
+          - python
+        args:
+          - /work/mlflow/promote.py
     - name: build
       inputs:
         parameters:
@@ -244,10 +312,27 @@ spec:
         image: "{{inputs.parameters.registry}}:{{inputs.parameters.version}}"
         env:
           - name: SERVICE_ENDPOINT
-            value: "{{inputs.parameters.service-endpoint}}"
+            value: "{{inputs.parameters.service_endpoint}}"
           - name: VERSION
             value: "{{inputs.parameters.version}}"
         command:
           - python
         args:
           - /opt/code/tests/response_test.py
+    - name: predict
+      inputs:
+        parameters:
+          - name: service-endpoint
+      container:
+        image: wbassler/mlflow-utils:0.0.1
+        volumeMounts:
+          - name: work
+            mountPath: /work
+        workingDir: /work/
+        env:
+          - name: SERVICE_ENDPOINT
+            value: "{{inputs.parameters.service_endpoint}}"
+        command:
+          - python
+        args:
+            - /work/mlflow/predict.py

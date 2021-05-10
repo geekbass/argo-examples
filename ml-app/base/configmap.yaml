@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mlgateway-configmap
+  namespace: mlops
+  labels:
+    app: mlgateway
+data:
+  MLFLOW_ARTIFACT_URI: http://mlflow-minio-service.mlflow.svc.cluster.local
+  MLFLOW_TRACKING_URI: http://mlflow-service.mlflow.svc.cluster.local

@@ -10,7 +10,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /ml/audit
+      - path: /predict
         pathType: Prefix
         backend:
           service:

@@ -11,7 +11,7 @@ spec:
   - host: tests
     http:
       paths:
-      - path: /ml/audit
+      - path: /predict
         pathType: Prefix
         backend:
           service:
