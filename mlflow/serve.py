@@ -10,6 +10,9 @@ mlflow.set_tracking_uri("http://mlflow")
 os.environ['MLFLOW_S3_ENDPOINT_URL'] = "http://minio"
 os.environ['AWS_ACCESS_KEY_ID'] = "minio"
 os.environ['AWS_SECRET_ACCESS_KEY'] = "minio123"
+# Basic Auth Info
+os.environ['MLFLOW_TRACKING_USERNAME'] = "admin"
+os.environ['MLFLOW_TRACKING_PASSWORD'] = "password"
 
 # Load the Model from MLFlow. By Default MLFlow loads the latest Version.
 model_name = "wine-model"
@@ -19,7 +22,7 @@ model = mlflow.pyfunc.load_model(
     model_uri=f"models:/{model_name}/{stage}"
 )
 
-
+mlflow/serve.py mlflow/serve.py
 @app.route('/predict', methods=['POST'])
 def main():
     # Get the request as a JSON
