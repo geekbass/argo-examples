@@ -1,14 +1,28 @@
 from flask import Flask, request, jsonify
 import pandas as pd
-import pickle
+import mlflow.pyfunc
+import os
 
 app = Flask(__name__)
 
 VERSION = "dev-0.0.16"
 
-# Load the Model
-with open('./model.pkl', 'rb') as file:
-    model = pickle.load(file)
+# Set the Remote Tracking Server Information
+mlflow.set_tracking_uri("http://mlflow")
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = "http://minio"
+os.environ['AWS_ACCESS_KEY_ID'] = "minio"
+os.environ['AWS_SECRET_ACCESS_KEY'] = "minio123"
+# Basic Auth Info
+os.environ['MLFLOW_TRACKING_USERNAME'] = "admin"
+os.environ['MLFLOW_TRACKING_PASSWORD'] = "password"
+
+# Load the Model from MLFlow. By Default MLFlow loads the latest Version.
+model_name = "wine-model"
+stage = "Production"
+
+model = mlflow.pyfunc.load_model(
+    model_uri=f"models:/{model_name}/{stage}"
+)
 
 @app.route("/healthz", methods=["GET"])
 def healthz():

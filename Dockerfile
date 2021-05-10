@@ -1,8 +1,7 @@
-FROM python:slim
-ENV WORK_DIR /opt/code
+FROM python:3.9.5-slim
 RUN python -m pip install --upgrade pip && \
-    pip install Flask && \
-    pip install requests
+    pip install mlflow[extras] && \
+    pip install psycopg2-binary
 EXPOSE 5000
 RUN mkdir -pv ${WORK_DIR}/tests
 COPY ./app.py ${WORK_DIR}

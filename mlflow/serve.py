@@ -22,7 +22,7 @@ model = mlflow.pyfunc.load_model(
     model_uri=f"models:/{model_name}/{stage}"
 )
 
-mlflow/serve.py mlflow/serve.py
+
 @app.route('/predict', methods=['POST'])
 def main():
     # Get the request as a JSON
