@@ -1,3 +1,6 @@
+"""
+This would be better served as a unit test or load test but is used as an example in the pipeline.
+"""
 import requests
 import logging
 import sys

@@ -1,3 +1,6 @@
+"""
+This file is used to demonstrate how you can serve your ML Model inside of Flask using the MLflow Model registry.
+"""
 from flask import Flask, request, jsonify
 import pandas as pd
 import mlflow.pyfunc
