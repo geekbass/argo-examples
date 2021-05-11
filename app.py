@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-VERSION = "dev-0.0.1"
+VERSION = "dev-0.0.2"
 
 # Set the Remote Tracking Server Information
 tracking_server = os.getenv("MLFLOW_TRACKING_URI", "http://mlflow")
