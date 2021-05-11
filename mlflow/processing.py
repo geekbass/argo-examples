@@ -1,3 +1,8 @@
+"""
+This file acts as a data processing task in an ML Pipeline. This generates random data for training but would likely
+be some other kind of process such as downloading data, scraping data, processing data, uploading it elsewhere etc...
+"""
+
 import random
 import csv
 

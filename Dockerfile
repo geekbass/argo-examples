@@ -1,4 +1,5 @@
 FROM python:3.9.5-slim
+ENV WORK_DIR /opt/code
 RUN python -m pip install --upgrade pip && \
     pip install mlflow[extras] && \
     pip install psycopg2-binary

@@ -1,4 +1,7 @@
-
+"""
+This file is used to demonstrate how to promote the latest version of a Model to "Production" stage so that it can be
+served out of the Model Registry.
+"""
 import os
 import warnings
 import sys
