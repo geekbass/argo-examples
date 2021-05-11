@@ -130,7 +130,7 @@ spec:
             template: predict
             arguments:
               parameters:
-                - name: service-endpoint
+                - name: service_endpoint
                   value: "{{workflow.parameters.service_endpoint}}"
     - name: clone
       inputs:
