@@ -169,7 +169,7 @@ spec:
       inputs:
         parameters:
           - name: csv_url
-          - name: experiment_url
+          - name: experiment_name
           - name: mlflow_tracking_uri
           - name: mlflow_artifact_uri
       container:
