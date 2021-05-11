@@ -307,7 +307,7 @@ spec:
         parameters:
           - name: version
           - name: registry
-          - name: service-endpoint
+          - name: service_endpoint
       container:
         image: "{{inputs.parameters.registry}}:{{inputs.parameters.version}}"
         env:
