@@ -258,7 +258,7 @@ spec:
           - name: branch
           - name: namespace
       resource:
-        action: create
+        action: apply
         manifest: |
           apiVersion: argoproj.io/v1alpha1
           kind: Application
