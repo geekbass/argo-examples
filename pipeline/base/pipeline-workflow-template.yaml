@@ -189,6 +189,8 @@ spec:
             value: "{{inputs.parameters.mlflow_tracking_uri}}"
           - name: MLFLOW_ARTIFACT_URI
             value: "{{inputs.parameters.mlflow_artifact_uri}}"
+          - name: GIT_PYTHON_REFRESH
+            value: "quiet"
         command:
           - python
         args:
@@ -209,6 +211,8 @@ spec:
             value: "{{inputs.parameters.mlflow_tracking_uri}}"
           - name: MLFLOW_ARTIFACT_URI
             value: "{{inputs.parameters.mlflow_artifact_uri}}"
+          - name: GIT_PYTHON_REFRESH
+            value: "quiet"
         command:
           - python
         args:
