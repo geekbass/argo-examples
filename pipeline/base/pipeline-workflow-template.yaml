@@ -123,7 +123,7 @@ spec:
                 - name: version
                   value: "{{workflow.parameters.version}}"
                 - name: service-endpoint
-                  value: "{{workflow.parameters.service-endpoint}}"
+                  value: "{{workflow.parameters.service_endpoint}}"
             dependencies:
               - ready-check
           - name: predict
@@ -131,7 +131,7 @@ spec:
             arguments:
               parameters:
                 - name: service-endpoint
-                  value: "{{workflow.parameters.service-endpoint}}"
+                  value: "{{workflow.parameters.service_endpoint}}"
     - name: clone
       inputs:
         parameters:
