@@ -22,9 +22,9 @@ spec:
     - name: service_endpoint
       value: "http://mlgateway.mlops-test.svc.cluster.local/predict"
     - name: mlflow_tracking_uri
-      value: "http://mlflow-service.mlflow.svc.cluster.local"
+      value: "http://mlflow-service.mlflow.svc.cluster.local:5000"
     - name: mlflow_artifact_uri
-      value: "http://mlflow-minio-service.mlflow.svc.cluster.local"
+      value: "http://mlflow-minio-service.mlflow.svc.cluster.local:9000"
       # http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv
     - name: csv_url
       value: "wine_data.csv"
