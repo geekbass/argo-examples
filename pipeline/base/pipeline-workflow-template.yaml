@@ -132,6 +132,8 @@ spec:
               parameters:
                 - name: service_endpoint
                   value: "{{workflow.parameters.service_endpoint}}"
+            dependencies:
+              - tests
     - name: clone
       inputs:
         parameters:
