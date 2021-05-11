@@ -122,7 +122,7 @@ spec:
                   value: "{{workflow.parameters.registry}}"
                 - name: version
                   value: "{{workflow.parameters.version}}"
-                - name: service-endpoint
+                - name: service_endpoint
                   value: "{{workflow.parameters.service_endpoint}}"
             dependencies:
               - ready-check
