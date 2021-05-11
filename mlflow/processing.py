@@ -31,7 +31,7 @@ def main():
 
         rows.append(row)
 
-    with open("wine_data.csv", 'w') as csvfile:
+    with open("/work/mlflow/wine_data.csv", 'w') as csvfile:
         # creating a csv writer object
         csvwriter = csv.writer(csvfile, delimiter=';')
 

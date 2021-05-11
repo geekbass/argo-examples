@@ -98,9 +98,9 @@ if __name__ == "__main__":
         mlflow.log_metric("r2", r2)
         mlflow.log_metric("mae", mae)
         # Log the CSV
-        mlflow.log_artifact(local_path='wine_data.csv')
+        mlflow.log_artifact(local_path="/work/mlflow/wine_data.csv")
         # Log the train.py
-        mlflow.log_artifact(local_path='train.py')
+        mlflow.log_artifact(local_path="/work/mlflow/train.py")
         # Register the model. It will overwrite to a new version if filename exists.
         # This will register as the name of the below name but will be an artifact called model.pkl
         mlflow.sklearn.log_model(sk_model=model,
