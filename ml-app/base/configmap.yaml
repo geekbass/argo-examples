@@ -6,5 +6,5 @@ metadata:
   labels:
     app: mlgateway
 data:
-  MLFLOW_ARTIFACT_URI: http://mlflow-minio-service.mlflow.svc.cluster.local
-  MLFLOW_TRACKING_URI: http://mlflow-service.mlflow.svc.cluster.local
+  MLFLOW_ARTIFACT_URI: "http://mlflow-minio-service.mlflow.svc.cluster.local:9000"
+  MLFLOW_TRACKING_URI: "http://mlflow-service.mlflow.svc.cluster.local:5000"
