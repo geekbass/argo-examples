@@ -27,7 +27,7 @@ spec:
       value: "http://mlflow-minio-service.mlflow.svc.cluster.local:9000"
       # http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv
     - name: csv_url
-      value: "wine_data.csv"
+      value: "/work/mlflow/wine_data.csv"
     - name: experiment_name
       value: "wine-quality"
   entrypoint: mlpipeline-template
