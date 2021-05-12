@@ -397,8 +397,6 @@ spec:
         env:
           - name: SERVICE_ENDPOINT
             value: "{{inputs.parameters.service_endpoint}}"
-        command:
-          - locust
         args:
           - -f
           - /work/tests/load_test.py
