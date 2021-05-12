@@ -128,7 +128,7 @@ spec:
             dependencies:
               - ready-check
           - name: version-check
-            template: tests
+            template: version-check
             arguments:
               parameters:
                 - name: registry
