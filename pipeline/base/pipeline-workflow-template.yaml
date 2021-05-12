@@ -143,6 +143,8 @@ spec:
               parameters:
                 - name: service_endpoint
                   value: "{{workflow.parameters.service_endpoint}}"
+                - name: version
+                  value: "{{workflow.parameters.version}}"
             dependencies:
               - version-check
     - name: clone
