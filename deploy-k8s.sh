@@ -5,13 +5,15 @@ set -e
 CLUSTER_NAME="argo"
 
 # Check for environment variables to be set so kubeseal can create the proper secret for DH creds
-if [[ ! -z ${DOCKER_USERNAME} ]]; then
-  echo "Please be sure to set your environment variable for DOCKER_USERNAME: export DOCKER_USERNAME=username"
+if [ -z $DOCKER_USERNAME ]; then
+  echo "Please be sure to set your environment variable for DOCKER_USERNAME..."
+  echo "export DOCKER_USERNAME=username"
   exit 1
 fi
 
-if [[ ! -z ${DOCKER_TOKEN} ]]; then
-  echo "Please be sure to set your environment variable for DOCKER_TOKEN: export DOCKER_TOKEN=yourtoken1234"
+if [ -z $DOCKER_TOKEN ]; then
+  echo "Please be sure to set your environment variable for DOCKER_TOKEN..."
+  echo "export DOCKER_TOKEN=yourtoken1234"
   exit 1
 fi
 
@@ -57,6 +59,7 @@ if [[ `kind get clusters | grep ${CLUSTER_NAME}` == "" ]]; then
 else
   echo "kind cluster with cluster name ${CLUSTER_NAME} already exists..."
   echo "Please delete it before moving on or utilize the existing cluster..."
+  echo "kind delete clusters argo"
   exit 1
 fi
 
