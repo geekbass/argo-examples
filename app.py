@@ -5,6 +5,10 @@ from flask import Flask, request, jsonify
 import pandas as pd
 import mlflow.pyfunc
 import os
+import logging
+
+log_format = "%(asctime)s - %(levelname)s - %(process)d/%(threadName)s - %(message)s"
+logging.basicConfig(format=log_format, level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -49,6 +53,8 @@ def main():
     quality = model.predict(features).tolist()
 
     # Return The quality prediction along with 200 code
+    logging.info("statusCode=200, quality={}, version={}.".format(quality, VERSION))
+
     return jsonify(
         statusCode=200,
         quality=quality,

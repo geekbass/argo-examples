@@ -1,3 +1,6 @@
+"""
+Used to actually send a request to get a prediction response for the quality
+"""
 import os
 import random
 import requests

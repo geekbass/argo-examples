@@ -147,6 +147,14 @@ spec:
                   value: "{{workflow.parameters.service_endpoint}}"
             dependencies:
               - version-check
+          - name: load-test
+            template: load-test
+            arguments:
+              parameters:
+                - name: service_endpoint
+                  value: "{{workflow.parameters.service_endpoint}}"
+            dependencies:
+              - predict
     - name: clone
       inputs:
         parameters:
@@ -376,3 +384,21 @@ spec:
           - python
         args:
             - /work/mlflow/predict.py
+    - name: load-test
+      inputs:
+        parameters:
+            - name: service_endpoint
+      container:
+        image: locust:1.5.2
+        env:
+          - name: SERVICE_ENDPOINT
+            value: "{{inputs.parameters.service_endpoint}}"
+        command:
+          - locust
+        args:
+          - /opt/code/tests/load_test.py
+          - --host=http://localhost:3000
+          - --headless
+          - --users 50
+          - --spawn-rate 10
+          - --run-time 2m
