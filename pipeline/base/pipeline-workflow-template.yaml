@@ -6,6 +6,7 @@ metadata:
 spec:
   arguments:
     parameters:
+    # If you fork the repo you will need to modify the repo and registry values
     - name: repo
       value: https://github.com/geekbass/argo-examples
     - name: branch
@@ -337,25 +338,25 @@ spec:
         args:
           - /opt/code/tests/response_test.py
     - name: version-check
-        # Might need a few tries for the pods to be ready to serve
-        retryStrategy:
-          limit: 5
-        inputs:
-          parameters:
-            - name: version
-            - name: registry
-            - name: service_endpoint
-        container:
-          image: "{{inputs.parameters.registry}}:{{inputs.parameters.version}}"
-          env:
-            - name: SERVICE_ENDPOINT
-              value: "{{inputs.parameters.service_endpoint}}"
-            - name: VERSION
-              value: "{{inputs.parameters.version}}"
-          command:
-            - python
-          args:
-            - /opt/code/tests/version_test.py
+      # Might need a few tries for the pods to be ready to serve
+      retryStrategy:
+        limit: 5
+      inputs:
+        parameters:
+          - name: version
+          - name: registry
+          - name: service_endpoint
+      container:
+        image: "{{inputs.parameters.registry}}:{{inputs.parameters.version}}"
+        env:
+          - name: SERVICE_ENDPOINT
+            value: "{{inputs.parameters.service_endpoint}}"
+          - name: VERSION
+            value: "{{inputs.parameters.version}}"
+        command:
+          - python
+        args:
+          - /opt/code/tests/version_test.py
     - name: predict
       inputs:
         parameters:
