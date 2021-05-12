@@ -387,16 +387,21 @@ spec:
     - name: load-test
       inputs:
         parameters:
-            - name: service_endpoint
+          - name: service_endpoint
       container:
         image: locust:1.5.2
+        volumeMounts:
+          - name: work
+            mountPath: /work
+        workingDir: /work/
         env:
           - name: SERVICE_ENDPOINT
             value: "{{inputs.parameters.service_endpoint}}"
         command:
           - locust
         args:
-          - /opt/code/tests/load_test.py
+          - -f
+          - /work/tests/load_test.py
           - --host=http://localhost:3000
           - --headless
           - --users 50
