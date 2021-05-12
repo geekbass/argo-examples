@@ -4,6 +4,17 @@ set -e
 # Define variables so these can be modified for future use
 CLUSTER_NAME="argo"
 
+# Check for environment variables to be set so kubeseal can create the proper secret for DH creds
+if [[ ! -z ${DOCKER_USERNAME} ]]; then
+  echo "Please be sure to set your environment variable for DOCKER_USERNAME: export DOCKER_USERNAME=username"
+  exit 1
+fi
+
+if [[ ! -z ${DOCKER_TOKEN} ]]; then
+  echo "Please be sure to set your environment variable for DOCKER_TOKEN: export DOCKER_TOKEN=yourtoken1234"
+  exit 1
+fi
+
 # Check for Docker install
 if [[ `which docker` == "" ]]; then
   echo "Docker not found. Please install docker before moving on."
@@ -39,6 +50,9 @@ fi
 # Check for existing kind cluster with same name
 if [[ `kind get clusters | grep ${CLUSTER_NAME}` == "" ]]; then
   echo "Creating K8s locally with kind..."
+  # If data for MLflow exists from previous run delete it first.
+  rm -rf mlflow/artifacts
+  rm -rf mlflow/backend
   kind create cluster --config kind.yaml --name ${CLUSTER_NAME}
 else
   echo "kind cluster with cluster name ${CLUSTER_NAME} already exists..."
@@ -49,7 +63,7 @@ fi
 # Apply the context to kubectl
 kubectl cluster-info --context kind-${CLUSTER_NAME} 2> /dev/null
 
-# Sleep
+# Sleep for 5 secs. Hack for giving enough time for control plane components to start.
 sleep 5
 
 # Wait for K8s services to start

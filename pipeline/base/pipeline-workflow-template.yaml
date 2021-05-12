@@ -309,6 +309,9 @@ spec:
         args:
           - /opt/code/src/deployment_status.py
     - name: tests
+      # Might need a few tries for the pods to be ready to serve
+      retryStrategy:
+        limit: 5
       inputs:
         parameters:
           - name: version
