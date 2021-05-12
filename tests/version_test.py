@@ -8,6 +8,7 @@ import os
 import json
 
 
+VERSION = os.getenv("VERSION")
 SERVICE_ENDPOINT = os.getenv("SERVICE_ENDPOINT")
 
 log_format = "%(asctime)s - %(levelname)s - %(process)d/%(threadName)s - %(message)s"
@@ -21,14 +22,16 @@ headers = {'Content-type': 'application/json'}
 
 
 def main():
-    resp = requests.post(SERVICE_ENDPOINT, data=json.dumps(data), headers=headers).status_code
-    print(resp)
+    resp = requests.post(SERVICE_ENDPOINT,data=json.dumps(data), headers=headers).json()
+    version = resp["version"]
 
-    if resp == 200:
-        logging.info("Response:\n {}.".format(resp))
+    logging.info("Checking for latest version of app: {}.".format(version))
+
+    if version == VERSION:
+        logging.info("Version is updated:\n {}.".format(version))
         sys.exit(0)
     else:
-        logging.info("Unexpected Response:\n {}.".format(resp))
+        logging.info("Version is not updated:\n {}.".format(version))
         sys.exit(1)
 
 

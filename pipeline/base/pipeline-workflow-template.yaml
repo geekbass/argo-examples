@@ -120,12 +120,22 @@ spec:
               parameters:
                 - name: registry
                   value: "{{workflow.parameters.registry}}"
+                - name: service_endpoint
+                  value: "{{workflow.parameters.service_endpoint}}"
+            dependencies:
+              - ready-check
+          - name: version-check
+            template: tests
+            arguments:
+              parameters:
+                - name: registry
+                  value: "{{workflow.parameters.registry}}"
                 - name: version
                   value: "{{workflow.parameters.version}}"
                 - name: service_endpoint
                   value: "{{workflow.parameters.service_endpoint}}"
             dependencies:
-              - ready-check
+              - tests
           - name: predict
             template: predict
             arguments:
@@ -133,7 +143,7 @@ spec:
                 - name: service_endpoint
                   value: "{{workflow.parameters.service_endpoint}}"
             dependencies:
-              - tests
+              - version-check
     - name: clone
       inputs:
         parameters:
@@ -322,12 +332,30 @@ spec:
         env:
           - name: SERVICE_ENDPOINT
             value: "{{inputs.parameters.service_endpoint}}"
-          - name: VERSION
-            value: "{{inputs.parameters.version}}"
         command:
           - python
         args:
           - /opt/code/tests/response_test.py
+    - name: version-check
+        # Might need a few tries for the pods to be ready to serve
+        retryStrategy:
+          limit: 5
+        inputs:
+          parameters:
+            - name: version
+            - name: registry
+            - name: service_endpoint
+        container:
+          image: "{{inputs.parameters.registry}}:{{inputs.parameters.version}}"
+          env:
+            - name: SERVICE_ENDPOINT
+              value: "{{inputs.parameters.service_endpoint}}"
+            - name: VERSION
+              value: "{{inputs.parameters.version}}"
+          command:
+            - python
+          args:
+            - /opt/code/tests/version_test.py
     - name: predict
       inputs:
         parameters:

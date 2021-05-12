@@ -51,7 +51,8 @@ def main():
     # Return The quality prediction along with 200 code
     return jsonify(
         statusCode=200,
-        quality=quality
+        quality=quality,
+        version=VERSION
     )
 
 
