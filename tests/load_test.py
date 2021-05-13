@@ -13,7 +13,7 @@ class WebsiteUser(HttpUser):
     wait_time = between(1, 2)
 
     @task
-    def on_start(self):
+    def predict(self):
         # Based on the min and max values for each column. Randomly generated.
         fixed_acidity = round(random.uniform(4, 15), 1)
         volatile_acidity = round(random.uniform(0, 1.6), 2)
