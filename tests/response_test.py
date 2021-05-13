@@ -1,5 +1,5 @@
 """
-Perhaps this would be better served as a unit test but this checks when the endpoint is available for other tasks 
+Perhaps this would be better served as a unit test but this checks when the endpoint is available for other tasks
 """
 import requests
 import logging

@@ -35,5 +35,5 @@ class WebsiteUser(HttpUser):
 
         headers = {'Content-type': 'application/json'}
 
-        self.client.post("http://tests/predict", data=json.dumps(data), headers=headers)
+        self.client.post(SERVICE_ENDPOINT, data=json.dumps(data), headers=headers)
 

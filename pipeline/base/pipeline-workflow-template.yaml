@@ -400,7 +400,7 @@ spec:
         args:
           - -f
           - /work/tests/load_test.py
-          - --host=http://localhost:3000
+          - --host="{{inputs.parameters.service_endpoint}}"
           - --headless
           - --users 50
           - --spawn-rate 10
