@@ -76,22 +76,26 @@ kubectl wait --namespace kube-system --for=condition=ready pod --selector=compon
 kubectl wait --namespace kube-system --for=condition=ready pod --selector=component=kube-controller-manager --timeout=130s
 
 # Deploy Sealed Secrets. Need this done before everything else.
+echo "###########################################################"
 echo "Deploying Sealed Secrets..."
 kubectl apply --filename sealed-secrets/controller.yaml
 sleep 3
 kubectl wait --namespace kube-system --for=condition=ready pod --selector=name=sealed-secrets-controller --timeout=90s
 
 # Deploy Argo CD
+echo "###########################################################"
 echo "Deploying Argo CD..."
 kustomize build argo-cd/overlays/kind/ | kubectl apply -f -
 kubectl wait --namespace argocd --for=condition=ready pod --selector=app.kubernetes.io/name=argocd-server --timeout=90s
 
 # Deploy the Prereqs which will hand deploying All the things: NGINX, ArgoWF, metrics-server, pipeline configs and the
 # initial Production app
+echo "###########################################################"
 echo "Deploying All other things which can be found in Argo CD UI..."
 kustomize build mlops/prereqs/ | kubectl apply -f -
 
 # Deploy and create SealedSecret for Docker
+echo "###########################################################"
 echo "Creating Sealed Secret for Docker Creds..."
 kubectl create secret --namespace argo generic docker-config \
   --from-literal="config.json={\"auths\": {\"https://index.docker.io/v1/\": {\"auth\": \"$(echo -n $DOCKER_USERNAME:$DOCKER_TOKEN|base64)\"}}}" \
@@ -111,13 +115,13 @@ echo "127.0.0.1 mlfow"
 echo "127.0.0.1 minio"
 echo ""
 echo "Once you update /etc/hosts you can access the following:"
-echo "Argo Workflows UI: https://argo/"
+echo "Argo Workflows UI: https://argo/argo"
 echo "ArgoCD UI: http://argocd"
 echo "MLFlow UI: http://mlfow"
 echo "Minio UI: http://minio"
 echo ""
 echo "Send requests for prediction to:"
-echo "Tests: http://tests/ml/predict"
-echo "Prod (Existing): http://localhost/ml/predict"
+echo "Tests: http://tests/predict"
+echo "Prod (Existing): http://localhost/predict"
 
 
