@@ -10,7 +10,7 @@ The current setup assumes/creates a "Production" ML app managed by Argo CD. This
 
 *NOTE: All parameters in the Pipeline file should be adjusted accordingly to fit your needs. If you fork this repo you will need to either modify the default parameter values for repo and registry in the workflow template (`pipeline/base/pipeline-workflow-template.yaml`) or simply change them each time you run the workflow template.*
 
-![Argo CD Applications](./images/argocd-ui.jpg "Argo CD Applications")
+![Argo CD Applications](./images/argocdui.jpg "Argo CD Applications")
 
 ![Argo Workflow ML Pipeline](./images/pipeline.jpg "Argo Workflow Template")
 
