@@ -12,7 +12,7 @@ logging.basicConfig(format=log_format, level=logging.INFO)
 
 app = Flask(__name__)
 
-VERSION = "dev-0.0.2"
+VERSION = "dev-0.0.3"
 
 # Set the Remote Tracking Server Information
 tracking_server = os.getenv("MLFLOW_TRACKING_URI", "http://mlflow")
