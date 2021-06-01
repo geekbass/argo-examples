@@ -7,4 +7,6 @@ resources:
   - nginx-ingress.yaml
   - pipeline-configs.yaml
   - mlflow.yaml
+  - jupyterhub.yaml
+  - auth-secret.yaml
 namespace: argocd

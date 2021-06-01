@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jupyterhub
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://jupyterhub.github.io/helm-chart/
+    # https://jupyterhub.github.io/helm-chart/
+    targetRevision: 0.11.1-n585.h60f274ea
+    chart: jupyterhub
+    helm:
+      values: |
+        hub:
+          config:
+            Authenticator:
+              admin_users:
+                - user1
+              allowed_users:
+                - user3
+                - user4
+            JupyterHub:
+              admin_access: true
+              authenticator_class: dummy
+        proxy:
+          secretToken: 748629fc0d1b2729ff22ca90cfadcca4b3d971d52090f57bb095bad11a9bd3b0
+          service:
+            type: ClusterIP
+        singleuser:
+          profileList:
+            - display_name: "Datascience environment"
+              description: "If you want the additional bells and whistles: Python, R, and Julia."
+              kubespawner_override:
+                image: jupyter/datascience-notebook:2343e33dec46
+            - display_name: "PySpark for Data Science"
+              description: "Spark on Kubernetes using PySpark"
+              kubespawner_override:
+              image: jupyter/pyspark-notebook:spark-3.1.1
+        ingress:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+            nginx.ingress.kubernetes.io/auth-type: basic
+            nginx.ingress.kubernetes.io/auth-secret: basic-auth
+            nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+          hosts: [jupyterhub]
+  destination:
+    namespace: jupyterhub
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - CreateNamespace=true

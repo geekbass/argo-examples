@@ -1,6 +1,5 @@
-# Argo Workflow and ArgoCD Example
-The following is an example of using [MLFlow](https://mlflow.org/) (for experimentation tracking and model registry), [Argo Workflows](https://argoproj.github.io/argo-workflows/) (for ML pipelines for building and testing ML apps), and [Argo CD](https://argoproj.github.io/argo-cd/)
-(for a GitOps approach for managing our Apps) running on Kubernetes. It uses an example ML App in Flask to serve an example ML model and utilizes several tasks in a Dag as examples of specific tasks that you might do in an MLPipeline. It is also worth noting that we are using Kustomize for initial install of Argo CD and also for Argo CD to manage our apps. A bash script has been provided to make initial setup of the cluster automated.
+# MLFlow, Argo Workflow, ArgoCD for ML
+The following is an example of using [MLFlow](https://mlflow.org/) (for experimentation tracking and model registry), [Argo Workflows](https://argoproj.github.io/argo-workflows/) (for ML pipelines for building and testing ML apps), and [Argo CD](https://argoproj.github.io/argo-cd/) (for a GitOps approach for managing our Apps) running on Kubernetes. It uses an example ML App in Flask to serve an example ML model and utilizes several tasks in a Dag as examples of specific tasks that you might do in an MLPipeline. It is also worth noting that we are using Kustomize for initial install of Argo CD and also for Argo CD to manage our apps. A bash script has been provided to make initial setup of the cluster automated.
 
 This creates a Kind cluster locally with local volumes attached for persistence and deploys the following components using ArgoCD App of Apps (`mlops/overlays/kind`): MLFlow (with PGSQL backend and Minio artifacts), ArgoCD (GitOps), Argo Workflows (Pipelines), Nginx Ingress (Ingress and basic auth), Metrics Server (HPA), Kubeseal (secret seal), and Pipeline configuration for Argo Workflow. Anytime you make changes to any of these components you can simply wait a few minutes or manually sync the `mlops-tools` application in Argo CD.
 
@@ -14,6 +13,10 @@ The current setup assumes/creates a "Production" ML app managed by Argo CD. This
 
 ![Argo Workflow ML Pipeline](./images/pipeline.jpg "Argo Workflow Template")
 
+If interested we also deploy [Jupyterhub](https://zero-to-jupyterhub.readthedocs.io/en/stable/index.html) experimentation and Notebooks. You can use this as a way to play around with the service and/or see how you can interact with Jupyter on Kubernetes for all your Data Science things.
+
+Enjoy!
+
 Phases:
 1) [x] Get an example build/deploy pipeline setup
 
@@ -21,7 +24,12 @@ Phases:
 
 3) [x] Add MLflow 
 
-4) [ ] Add Jupyter Notebooks for experimentation
+4) [x] Add Jupyter Notebooks for experimentation
+
+5) [ ] Add Spark examples for Jupyter and for Pipeline
+
+6) [ ] Create custom PySpark & MLFlow Docker image for JupyterHub
+
 
 
 ## Prereqs
@@ -69,6 +77,7 @@ bash deploy-k8s.sh
 127.0.0.1 tests
 127.0.0.1 mlflow
 127.0.0.1 minio
+127.0.0.1 jupyterhub
 ```
 
 When finished you can visit the following links:
@@ -77,6 +86,7 @@ When finished you can visit the following links:
 - [Argo Workflows](https://argo/argo/workflows/): admin/password
 - [MLFLow](http://mlflow/#/): admin/password
 - [Minio](http://minio): minio/minio123
+- [JupterHub](http://jupyterhub): admin/password and then login with user1 (admin), user2 or user3 (allowed users)
 
 ## Overview of Current Pipeline Flow
 The following steps are used when we need to run a new version of the example ML App. It is an example process that kicks off the example ML Pipeline.
