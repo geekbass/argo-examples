@@ -5,3 +5,5 @@ resources:
 - applications.yaml
 # Hack because app of apps is not creating the namespaces
 - namespaces.yaml
+# Shitty hack for kind clusters for Jupyterhub
+- auth-secret.yaml
