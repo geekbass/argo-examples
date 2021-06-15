@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://jupyterhub.github.io/helm-chart/
     # https://jupyterhub.github.io/helm-chart/
-    targetRevision: 1.0.0
+    targetRevision: 0.11.1-n585.h60f274ea
     chart: jupyterhub
     helm:
       values: |
@@ -31,7 +31,7 @@ spec:
             type: ClusterIP
         singleuser:
           # JupypterLabs UI: https://zero-to-jupyterhub.readthedocs.io/en/stable/jupyterhub/customizing/user-environment.html#use-jupyterlab-by-default
-          defaultUrl: "/lab"
+          # defaultUrl: "/lab"
           image:
             name: jupyter/minimal-notebook
             tag: 2343e33dec46
