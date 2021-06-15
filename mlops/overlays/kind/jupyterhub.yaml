@@ -31,7 +31,7 @@ spec:
             type: ClusterIP
         singleuser:
           # JupypterLabs UI: https://zero-to-jupyterhub.readthedocs.io/en/stable/jupyterhub/customizing/user-environment.html#use-jupyterlab-by-default
-          defaultUrl: "/lab"
+          # defaultUrl: "/lab"
           image:
             name: jupyter/minimal-notebook
             tag: 2343e33dec46
