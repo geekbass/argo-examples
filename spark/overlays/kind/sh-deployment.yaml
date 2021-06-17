@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spark-history
+  namespace: spark
+spec:
+  selector:
+    matchLabels:
+      app: spark-history
+  template:
+    metadata:
+      labels:
+        app: spark-history
+    spec:
+      # Used to ensure that the bucket is created ahead of time.
+      initContainers:
+        - name: create-bucket
+          image: minio/mc:latest
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/sh","-c" ]
+          args: [ "/usr/bin/mc config host add s3 $(SPARK_HISTORY_S3_ENDPOINT_URL) $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) --api S3v4; [[ ! -z `/usr/bin/mc ls s3 | grep $(BUCKET)` ]] || /usr/bin/mc mb s3/$(BUCKET)" ]
+          envFrom:
+            - configMapRef:
+                name: spark-history-bucket-configmap
+      containers:
+        - name: spark-history
+          image: wbassler/spark-aws:3.2.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          args:
+            - /opt/spark/bin/spark-class
+            - -Dspark.history.fs.logDirectory=s3a://$(BUCKET)/
+            - org.apache.spark.deploy.history.HistoryServer
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/spark/conf/spark-defaults.conf
+              subPath: spark-defaults.conf
+          envFrom:
+            - configMapRef:
+                name: spark-history-configmap
+            - configMapRef:
+                name: spark-history-bucket-configmap
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 18080
+      serviceAccountName: spark-history
+      volumes:
+        - name: config-volume
+          configMap:
+            name: spark-history-configmap

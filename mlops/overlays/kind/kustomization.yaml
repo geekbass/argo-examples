@@ -8,4 +8,5 @@ resources:
   - pipeline-configs.yaml
   - mlflow.yaml
   - jupyterhub.yaml
+  - spark.yaml
 namespace: argocd

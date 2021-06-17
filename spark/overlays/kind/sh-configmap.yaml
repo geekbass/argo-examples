@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-history-configmap
+  namespace: spark
+  labels:
+    app: spark-history
+data:
+  spark-defaults.conf: |-
+    spark.hadoop.fs.s3a.access.key=minio
+    spark.hadoop.fs.s3a.secret.key=minio123
+    spark.hadoop.fs.s3a.endpoint=mlflow-minio-service.mlflow.svc.cluster.local:9000
+    spark.hadoop.fs.s3a.path.style.access=True
+    # This is a must here because minio is not SSL
+    spark.hadoop.fs.s3a.connection.ssl.enabled=False
+    spark.hadoop.com.amazonaws.services.s3.enableV4=True
+    spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spark-history-bucket-configmap
+  namespace: spark
+  labels:
+    app: spark-history
+data:
+  SPARK_HISTORY_S3_ENDPOINT_URL: http://mlflow-minio-service.mlflow.svc.cluster.local:9000
+  AWS_ACCESS_KEY_ID: minio
+  AWS_SECRET_ACCESS_KEY: minio123
+  BUCKET: spark-history
