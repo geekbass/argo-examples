@@ -46,7 +46,8 @@ spec:
             - display_name: "PySpark for Data Science"
               description: "Spark on Kubernetes using PySpark"
               kubespawner_override:
-                image: jupyter/pyspark-notebook:spark-3.1.1
+                #image: jupyter/pyspark-notebook:spark-3.1.1
+                image: wbassler/ds-example:0.0.1
         ingress:
           enabled: true
           annotations:
