@@ -10,7 +10,11 @@ rules:
   resources:
   - pods
   verbs:
-  - '*'
+  - create
+  - get
+  - delete
+  - list
+  - watch
 - apiGroups:
   - ""
   resources:
