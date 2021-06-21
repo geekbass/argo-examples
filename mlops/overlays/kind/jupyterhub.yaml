@@ -32,6 +32,7 @@ spec:
         singleuser:
           # JupypterLabs UI: https://zero-to-jupyterhub.readthedocs.io/en/stable/jupyterhub/customizing/user-environment.html#use-jupyterlab-by-default
           # defaultUrl: "/lab"
+          serviceAccountName: jupyterhub
           image:
             name: jupyter/minimal-notebook
             tag: 2343e33dec46
