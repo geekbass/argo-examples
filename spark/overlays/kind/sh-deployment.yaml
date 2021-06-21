@@ -44,6 +44,12 @@ spec:
             - name: http
               protocol: TCP
               containerPort: 18080
+            - name: blockmanager
+              containerPort: 7777
+              protocol: TCP
+            - name: driver
+              containerPort: 2222
+              protocol: TCP
       serviceAccountName: spark-history
       volumes:
         - name: config-volume
