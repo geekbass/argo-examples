@@ -19,7 +19,7 @@ spec:
           image: minio/mc:latest
           imagePullPolicy: IfNotPresent
           command: [ "/bin/sh","-c" ]
-          args: [ "/usr/bin/mc config host add s3 $(SPARK_HISTORY_S3_ENDPOINT_URL) $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) --api S3v4; [[ ! -z `/usr/bin/mc ls s3 | grep $(BUCKET)` ]] || /usr/bin/mc mb s3/$(BUCKET)" ]
+          args: [ "/usr/bin/mc config host add s3 $(SPARK_HISTORY_S3_ENDPOINT_URL) $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) --api S3v4; [[ ! -z `/usr/bin/mc ls s3 | grep $(BUCKET)/logs` ]] || /usr/bin/mc mb s3/$(BUCKET)/logs" ]
           envFrom:
             - configMapRef:
                 name: spark-history-bucket-configmap
@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - /opt/spark/bin/spark-class
-            - -Dspark.history.fs.logDirectory=s3a://$(BUCKET)/
+            - -Dspark.history.fs.logDirectory=s3a://$(BUCKET)/logs/
             - org.apache.spark.deploy.history.HistoryServer
           volumeMounts:
             - name: config-volume
