@@ -23,8 +23,8 @@ spec:
       - --conf
       - spark.executor.instances=1
       - --conf
-#      - spark.executor.cores=1
-#      - --conf
+      - spark.executor.cores=1
+      - --conf
       - spark.testing.memory=2147480000
       - --conf
       - spark.executor.memory=1g
