@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: argo-workflow-spark-pi-example
+  namespace: argo
+spec:
+  entrypoint: sparkapp
+  templates:
+  - name: sparkapp
+    container:
+      image: wbassler/pyspark-aws:3.1.2
+      imagePullPolicy: Always
+      args:
+      - /opt/spark/bin/spark-submit
+      - --master
+      - k8s://https://kubernetes.default.svc
+      - --deploy-mode
+      - cluster
+      - --conf
+      - spark.kubernetes.namespace=spark
+      - --conf
+      - spark.kubernetes.container.image=wbassler/pyspark-aws:3.1.2
+      - --conf
+      - spark.executor.instances=1
+      - --conf
+#      - spark.executor.cores=1
+#      - --conf
+      - spark.testing.memory=2147480000
+      - --conf
+      - spark.executor.memory=1g
+      - --conf
+      - spark.kubernetes.pyspark.pythonVersion=3
+      - --conf
+      - spark.kubernetes.authenticate.driver.serviceAccountName=spark
+      - --conf
+      - spark.kubernetes.authenticate.serviceAccountName=spark
+      - --conf
+      - spark.eventLog.dir=s3a://spark-history/logs/
+      - --conf
+      - spark.eventLog.enabled=true
+      - --conf
+      - spark.hadoop.fs.s3a.access.key=minio
+      - --conf
+      - spark.hadoop.fs.s3a.secret.key=minio123
+      - --conf
+      - spark.hadoop.fs.s3a.endpoint=mlflow-minio-service.mlflow.svc.cluster.local:9000
+      - --conf
+      - spark.hadoop.fs.s3a.path.style.access=true
+      - --conf
+      - spark.hadoop.fs.s3a.connection.ssl.enabled=false
+      - --conf
+      - spark.hadoop.com.amazonaws.services.s3.enableV4=true
+      - --conf
+      - spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem
+      - --conf
+      - spark.jars.ivy=/tmp
+      - local:///opt/spark/examples/src/main/python/pi.py
+      resources: {}
+    restartPolicy: OnFailure
